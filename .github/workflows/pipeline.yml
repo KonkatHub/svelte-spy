@@ -9,6 +9,7 @@ on:
       - main
 
 jobs:
+  # TODO: Rename to `format`
   dependencies:
     runs-on: ubuntu-latest
     steps:
@@ -21,7 +22,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: 'pnpm'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2

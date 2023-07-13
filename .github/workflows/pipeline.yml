@@ -1,9 +1,6 @@
 name: Formatting & Health Check
 
 on:
-  push:
-    branches:
-      - 1-add-action-format-and-check
   pull_request:
     branches:
       - main

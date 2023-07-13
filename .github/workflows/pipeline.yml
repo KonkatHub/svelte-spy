@@ -9,9 +9,11 @@ on:
       - main
 
 jobs:
-  # TODO: Rename to `format`
-  dependencies:
+  format-and-check:
     runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository.
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,12 +50,14 @@ jobs:
         run: pnpm install
 
       - name: Format code with Prettier
-        uses: creyD/prettier_action@v4.3
-        with:
-          prettier_options: --write **/*.{js,ts,svelte,md}
+        run: pnpm run format
 
       - name: Lint code with ESLint
         run: pnpm run lint
 
       - name: Check health
         run: pnpm run check
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: '[AUTOMATED] chore: format all files using Prettier'

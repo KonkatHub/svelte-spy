@@ -5,8 +5,8 @@ on:
     branches:
       - 1-add-action-format-and-check
   pull_request:
-    branches:
-      - main
+        branches:
+          - main
 
 jobs:
   format-and-check:

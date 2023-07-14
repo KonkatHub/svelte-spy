@@ -15,7 +15,7 @@ export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
   node: HTMLElement,
   options: SpyOptions
 ) => {
-  const targetElement = document.getElementById(options.target);
+  const targetElement = document.querySelector(options.target);
 
   if (!targetElement) {
     return;

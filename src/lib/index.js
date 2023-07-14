@@ -1,1 +1,1 @@
-// Reexport your entry components here
+export { spy } from './spy.js';

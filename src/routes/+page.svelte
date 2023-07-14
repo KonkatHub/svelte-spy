@@ -1,3 +1,26 @@
-<h1>Welcome to your library project</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+  import { spy } from '$lib/actions/spyAction.js';
+  import type { SignalEvent } from '$lib/events/SignalEvent.js';
+
+  let isClicked = false;
+  let test = 0;
+
+  function onClick() {
+    isClicked = !isClicked;
+    test++;
+  }
+
+  function onSignal(e: SignalEvent) {
+    console.log(e.detail);
+  }
+</script>
+
+<button id="button" data-test={test} data-clicked={isClicked} on:click={onClick}>Click me</button>
+
+<div
+  on:signal={onSignal}
+  use:spy={{
+    target: 'button',
+    intel: ['data-clicked', 'data-test'],
+  }}
+/>

@@ -1,2 +1,2 @@
-export { spy } from './action/spy.js';
-export type { SignalEvent, SignalEventDetail } from './events/signal.js';
+export { spy, type SpyOptions } from './actions/spyAction.js';
+export { SignalEvent } from './events/SignalEvent.js';

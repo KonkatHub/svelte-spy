@@ -1,7 +1,8 @@
-import { signal, type SignalEvent, type SignalEventDetail } from '$lib/events/signal.js';
+import { SignalEvent } from '$lib/events/SignalEvent.js';
+import { onAttributeMutation } from '$lib/observers/mutationListeners.js';
 import type { Action } from 'svelte/action';
 
-type SpyOptions = {
+export type SpyOptions = {
   target: string;
   intel: string[];
 };
@@ -21,11 +22,7 @@ export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
   }
 
   const observer = new MutationObserver((mutationsList: MutationRecord[]) => {
-    mutationsList.forEach((mutation) => {
-      if (mutation.type !== 'attributes') {
-        return;
-      }
-
+    onAttributeMutation(mutationsList, (mutation) => {
       options.intel.forEach((intel) => {
         if (mutation.attributeName !== intel) {
           return;
@@ -34,13 +31,17 @@ export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
         const targetElement = mutation.target as HTMLElement;
         const value = targetElement.getAttribute(intel);
 
-        signal(node, {
-          spy: node,
-          intel,
-          target: options.target,
-          targetElement,
-          value,
-        });
+        node.dispatchEvent(
+          new SignalEvent({
+            detail: {
+              spy: node,
+              intel,
+              target: options.target,
+              targetElement,
+              value,
+            },
+          })
+        );
       });
     });
   });

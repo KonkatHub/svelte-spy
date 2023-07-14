@@ -25,12 +25,33 @@ yarn add @konkat/svelte-konkat-api
 pnpm add @konkat/svelte-spy
 ```
 
+## Getting started
 
+First of all, you will need an HTML element with an attribute you want to spy on.
 
+For example:
 
+```html
+<button data-clicked={isClicked} on:click={() => (isClicked = !isClicked)}>
+    Click me
+</button>
 ```
 
+> Note: You can use any attribute you want, but it must be a valid HTML attribute.
 
+Then, you will need an HTML element that will "spy" (listen) to the attribute updates. Also add
+a `on:signal` event handler to the element to receive the updates.
 
+For example:
 
+```html
+<div
+  use:spy={{
+    target: 'button',
+    intel: ['data-clicked'],
+  }}
+  on:signal={(e) => console.log(e.detail)}
+>
+  Spying...
+</div>
 ```

@@ -15,7 +15,7 @@
   }
 </script>
 
-<button id="button" data-test={test} data-clicked={isClicked} on:click={onClick}>Click me</button>
+<button data-test={test} data-clicked={isClicked} on:click={onClick}>Click me</button>
 
 <div
   on:signal={onSignal}

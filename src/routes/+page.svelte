@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { spy } from '$lib/spy.js';
+  import { spy } from '$lib/action/spy.js';
 
   let isClicked = false;
   let test = 0;

@@ -1,14 +1,5 @@
+import { signal, type SignalEvent, type SignalEventDetail } from '$lib/events/signal.js';
 import type { Action } from 'svelte/action';
-
-type SignalEventDetail = {
-  spy: HTMLElement;
-  intel: string;
-  value: string | null;
-  target: string;
-  targetElement: HTMLElement;
-};
-
-export type SignalEvent = CustomEvent<SignalEventDetail>;
 
 type SpyOptions = {
   target: string;
@@ -36,20 +27,20 @@ export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
       }
 
       options.intel.forEach((intel) => {
-        if (mutation.attributeName !== intel || !(node instanceof HTMLElement)) {
+        if (mutation.attributeName !== intel) {
           return;
         }
+
         const targetElement = mutation.target as HTMLElement;
         const value = targetElement.getAttribute(intel);
 
-        const detail: SignalEventDetail = {
+        signal(node, {
           spy: node,
           intel,
           target: options.target,
           targetElement,
           value,
-        };
-        node.dispatchEvent(new CustomEvent<SignalEventDetail>('signal', { detail }));
+        });
       });
     });
   });

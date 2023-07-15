@@ -2,15 +2,36 @@ import { SignalEvent } from '$lib/events/SignalEvent.js';
 import { onAttributeMutation } from '$lib/observers/mutationListeners.js';
 import type { Action } from 'svelte/action';
 
+/**
+ * Represents the options needed by the spy action.
+ */
 export type SpyOptions = {
+  /**
+   * Target element selector. Will be used in `document.querySelector()`.
+   */
   target: string;
+
+  /**
+   * HTML attribute names to spy on.
+   */
   intel: string[];
 };
 
+/**
+ * The events potentially triggered by the Action. The type is needed for
+ * Svelte auto-complete.
+ */
 type SpyEvents = {
   'on:signal': (e: SignalEvent) => void;
 };
 
+/**
+ * Spy action used to spy on HTML attributes. It will dispatch a `signal` event
+ * when the attribute changes.
+ *
+ * @param node - The HTML element to notify when intel is updated.
+ * @param options - The options needed by the spy action.
+ */
 export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
   node: HTMLElement,
   options: SpyOptions

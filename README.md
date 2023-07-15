@@ -170,6 +170,9 @@ element with an `id` attribute:
 
 ## API Reference
 
+While using this package, you can hover any functions/types/properties to see their
+documentation.
+
 ### Spy action
 
 The `spy` action is the main way to spy on a target. It is used to spy on

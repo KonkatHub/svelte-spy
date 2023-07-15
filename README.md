@@ -14,9 +14,13 @@ with a Svelte Action. It should be easy to use and easy to understand via its "s
   - [Table of content](#table-of-content)
   - [Installation](#installation)
   - [Getting started](#getting-started)
+    - [Lexicon](#lexicon)
   - [Examples](#examples)
     - [Spying on multiple intel](#spying-on-multiple-intel)
     - [Selecting a specific target](#selecting-a-specific-target)
+  - [API Reference](#api-reference)
+    - [Spy action](#spy-action)
+    - [SignalEvent](#signalevent)
 
 ## Installation
 
@@ -40,7 +44,7 @@ For example:
 </script>
 
 <button data-clicked={isClicked} on:click={() => (isClicked = !isClicked)}>
-    Click me
+  Click me
 </button>
 ```
 
@@ -71,6 +75,13 @@ For example:
   Spying...
 </div>
 ```
+
+### Lexicon
+
+- **Spy**: The HTML element that will listen to the attribute updates.
+- **Target**: The HTML element you want to spy on.
+- **Intel**: The HTML attribute you want to spy on.
+- **Signal**: The event that is fired when the attribute is updated.
 
 ## Examples
 
@@ -106,7 +117,7 @@ attributes being a stardard HTML button attribute (`disabled`):
 </script>
 
 <button data-clicked={isClicked} {disabled} on:click={onClick}>
-    Click me
+  Click me
 </button>
 
 <div
@@ -143,7 +154,7 @@ element with an `id` attribute:
 </script>
 
 <button id="MyButton" data-clicked={isClicked} on:click={onClick}>
-    Click me
+  Click me
 </button>
 
 <div
@@ -155,4 +166,42 @@ element with an `id` attribute:
 >
   Spying...
 </div>
+```
+
+## API Reference
+
+### Spy action
+
+The `spy` action is the main way to spy on a target. It is used to spy on
+HTML attributes updates.
+
+Here's the signature of the `spy` action:
+
+```ts
+const spy: Action<HTMLElement, SpyOptions, SpyEvents>;
+```
+
+When using the `spy` action, you must provide a SpyOptions object as a parameter:
+
+```ts
+type SpyOptions = {
+  target: string;
+  intel: string[];
+};
+```
+
+### SignalEvent
+
+The `SignalEvent` is fired when an **intel** being spied on is updated. It's
+a `CustomEvent` with the type of `signal`. It contains a `detail` property
+that is of type `SignalEventDetail`:
+
+```ts
+type SignalEventDetail = {
+  spy: HTMLElement;
+  intel: string;
+  value: string | null;
+  target: string;
+  targetElement: HTMLElement;
+};
 ```

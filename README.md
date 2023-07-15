@@ -1,58 +1,207 @@
-# create-svelte
+# Svelte Spy
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Spy (listen) on intel (HTML attributes) with this simple to use Svelte Action.
 
-Read more about creating a library [in the docs](https://kit.svelte.dev/docs/packaging).
+## Goal
 
-## Creating a project
+The goal of this project is to provide a simple way to spy on HTML attributes updates
+with a Svelte Action. It should be easy to use and easy to understand via its "spy-themed" API.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Table of content
+
+- [Svelte Spy](#svelte-spy)
+  - [Goal](#goal)
+  - [Table of content](#table-of-content)
+  - [Installation](#installation)
+  - [Getting started](#getting-started)
+    - [Lexicon](#lexicon)
+  - [Examples](#examples)
+    - [Spying on multiple intel](#spying-on-multiple-intel)
+    - [Selecting a specific target](#selecting-a-specific-target)
+  - [API Reference](#api-reference)
+    - [Spy action](#spy-action)
+    - [SignalEvent](#signalevent)
+
+## Installation
+
+To install this package:
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+npm i @konkat/svelte-spy
+yarn add @konkat/svelte-spy
+pnpm add @konkat/svelte-spy
 ```
 
-## Developing
+## Getting started
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+First of all, you will need an HTML element with an attribute you want to spy on.
 
-```bash
-npm run dev
+For example:
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```html
+<script lang="ts">
+  let isClicked = false
+</script>
+
+<button data-clicked={isClicked} on:click={() => (isClicked = !isClicked)}>
+  Click me
+</button>
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+> Note: You can use any attribute you want, but it must be a valid HTML attribute.
 
-## Building
+Then, you will need an HTML element that will "spy" (listen) to the attribute updates. Also add
+a `on:signal` event handler to the element to receive the updates.
 
-To build your library:
+For example:
 
-```bash
-npm run package
+```html
+<script lang="ts">
+  import { spy, type SignalEvent } from '@konkat/svelte-spy'
+
+  function onSignal(e: SignalEvent) {
+    const { intel, targetElement, value } = e.detail;
+    console.log(`{intel} on {targetElement} was updated to {value}`)
+  }
+</script>
+
+<div
+  use:spy={{
+    target: 'button',
+    intel: ['data-clicked'],
+  }}
+  on:signal={onSignal}
+>
+  Spying...
+</div>
 ```
 
-To create a production version of your showcase app:
+### Lexicon
 
-```bash
-npm run build
+- **Spy**: The HTML element that will listen to the attribute updates.
+- **Target**: The HTML element you want to spy on.
+- **Intel**: The HTML attribute you want to spy on.
+- **Signal**: The event that is fired when the attribute is updated.
+
+## Examples
+
+We'll go over some examples to see how to use this package at its full potential.
+
+> For simplicity purposes, we'll colocate the spy and the target in the same file. But you can
+> separate them in different files if you want. Matter of fact, they can be as far from each other as you want and they don't need to be children/parent of each other.
+
+### Spying on multiple intel
+
+In the following examples, we will spy on multiple attributes at the same time, one of the
+attributes being a stardard HTML button attribute (`disabled`):
+
+```html
+<script lang="ts">
+  import { spy, type SignalEvent } from '@konkat/svelte-spy'
+
+  let isClicked = false
+  let clickCount = 0;
+  let disabled = false;
+
+  function onClick() {
+    isClicked = !isClicked
+    clickCount++
+    if (clickCount >= 5) {
+      isDisabled = true
+    }
+  }
+
+  function onSignal(e: SignalEvent) {
+    console.log(e.detail)
+  }
+</script>
+
+<button data-clicked={isClicked} {disabled} on:click={onClick}>
+  Click me
+</button>
+
+<div
+  use:spy={{
+    target: 'button',
+    intel: ['data-clicked', 'disabled'],
+  }}
+  on:signal={onSignal}
+>
+  Spying...
+</div>
 ```
 
-You can preview the production build with `npm run preview`.
+### Selecting a specific target
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+To spy on a target, you can use any valid CSS selector. For example, you can spy on a specific
+element with an `id` attribute:
 
-## Publishing
+> Under the hood, we simply use `document.querySelector(target)` to find the target element.
 
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
+```html
+<script lang="ts">
+  import { spy, type SignalEvent } from '@konkat/svelte-spy'
 
-To publish your library to [npm](https://www.npmjs.com):
+  let isClicked = false
 
-```bash
-npm publish
+  function onClick() {
+    isClicked = !isClicked
+  }
+
+  function onSignal(e: SignalEvent) {
+    console.log(e.detail)
+  }
+</script>
+
+<button id="MyButton" data-clicked={isClicked} on:click={onClick}>
+  Click me
+</button>
+
+<div
+  use:spy={{
+    target: '#MyButton',
+    intel: ['data-clicked'],
+  }}
+  on:signal={onSignal}
+>
+  Spying...
+</div>
+```
+
+## API Reference
+
+### Spy action
+
+The `spy` action is the main way to spy on a target. It is used to spy on
+HTML attributes updates.
+
+Here's the signature of the `spy` action:
+
+```ts
+const spy: Action<HTMLElement, SpyOptions, SpyEvents>;
+```
+
+When using the `spy` action, you must provide a SpyOptions object as a parameter:
+
+```ts
+type SpyOptions = {
+  target: string;
+  intel: string[];
+};
+```
+
+### SignalEvent
+
+The `SignalEvent` is fired when an **intel** being spied on is updated. It's
+a `CustomEvent` with the type of `signal`. It contains a `detail` property
+that is of type `SignalEventDetail`:
+
+```ts
+type SignalEventDetail = {
+  spy: HTMLElement;
+  intel: string;
+  value: string | null;
+  target: string;
+  targetElement: HTMLElement;
+};
 ```

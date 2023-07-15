@@ -29,8 +29,8 @@ type SpyEvents = {
  * Spy action used to spy on HTML attributes. It will dispatch a `signal` event
  * when the attribute changes.
  *
- * @param node - The HTML element to notify when intel is updated.
- * @param options - The options needed by the spy action.
+ * @param node - The HTML element to notify when intel is updated
+ * @param options - The options needed by the spy action
  */
 export const spy: Action<HTMLElement, SpyOptions, SpyEvents> = (
   node: HTMLElement,

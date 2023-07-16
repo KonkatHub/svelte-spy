@@ -1,7 +1,25 @@
 {
   "name": "@konkat/svelte-spy",
-  "version": "0.0.1",
+  "description": "A simple to use \"spy\" action to listen when attributes are updated on target elements.",
+  "version": "0.0.2",
   "license": "MIT",
+  "author": "Mathis Côté",
+  "homepage": "https://github.com/KonkatHub/svelte-spy.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KonkatHub/svelte-spy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KonkatHub/svelte-spy/issues"
+  },
+  "keywords": [
+    "spy",
+    "observer",
+    "svelte",
+    "sveltekit",
+    "svelte actions",
+    "mutation observer"
+  ],
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",

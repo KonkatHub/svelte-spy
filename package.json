@@ -1,5 +1,5 @@
 {
-  "name": "svelte-spy",
+  "name": "@konkat/svelte-spy",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {

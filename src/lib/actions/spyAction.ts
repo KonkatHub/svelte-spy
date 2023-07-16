@@ -22,6 +22,10 @@ export type SpyOptions = {
  * Svelte auto-complete.
  */
 type SpyEvents = {
+  /**
+   * The `signal` event is dispatched when the spy action detects a change in
+   * the target element.
+   */
   'on:signal': (e: SignalEvent) => void;
 };
 
